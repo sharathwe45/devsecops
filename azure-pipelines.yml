@@ -45,7 +45,58 @@ stages:
           
     - upload: manifests
       artifact: manifests
-
+    - upload: manifests
+      artifact: manifests
+      
+    - task: CmdLine@2
+      displayName: Trivy Scan
+      inputs:
+        script: |
+         docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity MEDIUM,HIGH --ignore-unfixed $(containerRegistry)/$(imageRepository):$(tag) || true  
+         
+         docker run --rm -v /var/run/docker.sock:/var/run/docker.sock  -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy  --exit-code 0 --severity CRITICAL --ignore-unfixed  $(containerRegistry)/$(imageRepository):$(tag) || true 
+   
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: '*.json'
+        targetFolder: $(Build.ArtifactStagingDirectory)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: trivy_results
+        
+        
+      
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.6' 
+    - script: python -m pip install bandit
+    - script: bandit -f json -o sast-result.json -r app.py || true
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: '*.json'
+        targetFolder: $(Build.ArtifactStagingDirectory)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: sast_results
+        
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.6' 
+    - script: python -m pip install pyraider  
+    - script: pyraider check -f requirements.txt -e json sca-results.json || true
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: '*.json'
+        targetFolder: $(Build.ArtifactStagingDirectory)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: sca_results  
 - stage: Deploy
   displayName: Deploy stage
   dependsOn: Build
