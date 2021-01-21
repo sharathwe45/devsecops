@@ -60,6 +60,21 @@ stages:
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)'
         artifactName: sast_results
+        
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.6' 
+    - script: python -m pip install pyraider  
+    - script: pyraider check -f requirements.txt -e json sca-results.json || true
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: '*.json'
+        targetFolder: $(Build.ArtifactStagingDirectory)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: sca_results  
 
 - stage: Deploy
   displayName: Deploy stage
