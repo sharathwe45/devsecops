@@ -12,45 +12,9 @@
 	</style>
 </head>
 <body>
-	<nav class="navbar navbar-dark bg-primary">
-	  	<a class="navbar-brand" href="#">Home</a>
-	</nav>
-	<div class="container">
-		<br>
-		<div class="card" class="col-sm-12">
-			<div class="card-header text-white bg-primary">
-				Upload YAML File
-			</div>	
-			<div class="card-body">
-				<form action="/upload" method="post" enctype="multipart/form-data">
-				  	<div class="form-group">			    	
-				    	<input type="file" class="form-control" id="file" name="file" required="true">
-				  	</div>
-				  	<button type="submit" class="btn btn-primary">Submit</button>
-				</form>
-			</div>
-		</div>
-		{% if data %}
-		<br>
-		<div class="card" class="col-sm-12">				
-			<div class="card-body">
-				<table class="table table-responsive">
-					<tr>
-						<th>First Name</th>
-						<th>Last Name</th>
-					</tr>
-					{% for d in data %}
-						<tr>
-							<td>{{d.first_name}}</td>
-							<td>{{d.last_name}}</td>
-						</tr>
-					{% endfor %}
-				</table>							
-			</div>
-		</div>
-		{% endif %}
-	</div>
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>	
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<h1>DevSecOps</h1>
+	<h6>Hello DevSecOps Engineer</h6>
+
+	
 </body>
 </html>
