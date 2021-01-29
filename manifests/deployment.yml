@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: sharathwedevsecops 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sharathwedevsecops
+  template:
+    metadata:
+      labels:
+        app: sharathwedevsecops 
+    spec:
+      containers:
+        - name: sharathwedevsecops 
+          image: lleqyszqareormaq.azurecr.io/sharathwedevsecops
+          ports:
+          - containerPort: 5000
